@@ -11,7 +11,7 @@ public class PalindromeCheckerApp {
             System.out.println("Welcome to the Palindrome Checker Application!");
             System.out.println("This application checks whether a given string is a palindrome.");
 
-            // End of UC1 - Program ready for next use case
+            // End of UseCase1 - Program ready for next use case.
             System.out.println("Application initialized successfully.");
         }
 }
