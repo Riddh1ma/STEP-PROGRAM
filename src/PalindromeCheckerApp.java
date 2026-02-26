@@ -1,109 +1,95 @@
-import java.util.Scanner;
 import java.util.Stack;
 import java.util.Deque;
 import java.util.LinkedList;
 
-/* Strategy Interface */
-interface PalindromeStrategy {
-    boolean checkPalindrome(String input);
-}
+public class PalindromeCheckerApp {
 
-/* Stack Strategy Implementation */
-class StackStrategy implements PalindromeStrategy {
+    // Reverse String Approach
+    public static boolean reverseMethod(String input) {
+        String reversed = "";
+        for (int i = input.length() - 1; i >= 0; i--) {
+            reversed += input.charAt(i);
+        }
+        return input.equals(reversed);
+    }
 
-    @Override
-    public boolean checkPalindrome(String input) {
-
+    // Stack Approach
+    public static boolean stackMethod(String input) {
         Stack<Character> stack = new Stack<>();
-
         for (char ch : input.toCharArray()) {
             stack.push(ch);
         }
-
         for (int i = 0; i < input.length(); i++) {
             if (input.charAt(i) != stack.pop()) {
                 return false;
             }
         }
-
         return true;
     }
-}
 
-/* Deque Strategy Implementation */
-class DequeStrategy implements PalindromeStrategy {
-
-    @Override
-    public boolean checkPalindrome(String input) {
-
+    // Deque Approach
+    public static boolean dequeMethod(String input) {
         Deque<Character> deque = new LinkedList<>();
-
         for (char ch : input.toCharArray()) {
             deque.addLast(ch);
         }
-
         while (deque.size() > 1) {
             if (!deque.removeFirst().equals(deque.removeLast())) {
                 return false;
             }
         }
-
         return true;
     }
-}
 
-/* Context Class */
-class PalindromeContext {
-
-    private PalindromeStrategy strategy;
-
-    public PalindromeContext(PalindromeStrategy strategy) {
-        this.strategy = strategy;
+    // Recursive Approach
+    public static boolean recursiveMethod(String input, int start, int end) {
+        if (start >= end) {
+            return true;
+        }
+        if (input.charAt(start) != input.charAt(end)) {
+            return false;
+        }
+        return recursiveMethod(input, start + 1, end - 1);
     }
-
-    public boolean executeStrategy(String input) {
-        return strategy.checkPalindrome(input);
-    }
-}
-
-/* Main Application */
-public class PalindromeCheckerApp {
 
     public static void main(String[] args) {
 
-        Scanner scanner = new Scanner(System.in);
+        String input = "racecar";  // Hardcoded for consistent benchmarking
 
-        System.out.println("=========================================================");
-        System.out.println("   UC12: Strategy Pattern Palindrome Checker (Advanced) ");
-        System.out.println("=========================================================");
+        System.out.println("=================================================");
+        System.out.println(" UC13: Performance Comparison of Algorithms     ");
+        System.out.println("=================================================");
 
-        System.out.print("Enter a string: ");
-        String input = scanner.nextLine();
+        // Reverse Method Timing
+        long startTime = System.nanoTime();
+        reverseMethod(input);
+        long endTime = System.nanoTime();
+        long reverseTime = endTime - startTime;
 
-        System.out.println("Choose Strategy:");
-        System.out.println("1. Stack Strategy");
-        System.out.println("2. Deque Strategy");
-        System.out.print("Enter choice (1 or 2): ");
+        // Stack Method Timing
+        startTime = System.nanoTime();
+        stackMethod(input);
+        endTime = System.nanoTime();
+        long stackTime = endTime - startTime;
 
-        int choice = scanner.nextInt();
+        // Deque Method Timing
+        startTime = System.nanoTime();
+        dequeMethod(input);
+        endTime = System.nanoTime();
+        long dequeTime = endTime - startTime;
 
-        PalindromeStrategy strategy;
+        // Recursive Method Timing
+        startTime = System.nanoTime();
+        recursiveMethod(input, 0, input.length() - 1);
+        endTime = System.nanoTime();
+        long recursiveTime = endTime - startTime;
 
-        if (choice == 1) {
-            strategy = new StackStrategy();
-        } else {
-            strategy = new DequeStrategy();
-        }
+        // Display Results
+        System.out.println("Reverse Method Time   : " + reverseTime + " ns");
+        System.out.println("Stack Method Time     : " + stackTime + " ns");
+        System.out.println("Deque Method Time     : " + dequeTime + " ns");
+        System.out.println("Recursive Method Time : " + recursiveTime + " ns");
 
-        PalindromeContext context = new PalindromeContext(strategy);
-        boolean result = context.executeStrategy(input);
-
-        if (result) {
-            System.out.println("Result: The given string is a Palindrome.");
-        } else {
-            System.out.println("Result: The given string is NOT a Palindrome.");
-        }
-
-        scanner.close();
+        System.out.println("\n(Note: Results may vary per execution)");
     }
 }
